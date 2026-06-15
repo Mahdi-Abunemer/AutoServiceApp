@@ -1,6 +1,6 @@
 namespace AutoServiceApp.Models;
 
-public class Customer : BaseEntity, IExportable
+public class Customer : BaseEntity
 {
     private readonly List<Car> _cars = new();
 
