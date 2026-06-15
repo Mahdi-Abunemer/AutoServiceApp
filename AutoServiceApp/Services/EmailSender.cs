@@ -2,10 +2,12 @@ namespace AutoServiceApp.Services;
 
 public class EmailSender
 {
-    public List<string> Log { get; set; } = new();
+    private readonly List<string> _log = new();
+
+    public IReadOnlyList<string> Log => _log;
 
     public void Send(string email, string subject, string body)
     {
-        Log.Add($"EMAIL {DateTime.Now:g} -> {email}: {subject} {body}");
+        _log.Add($"EMAIL {DateTime.Now:g} -> {email}: {subject} {body}");
     }
 }
