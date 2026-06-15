@@ -27,7 +27,6 @@ public class AutoServiceManager
     public SmsNotifier SmsNotifier { get; set; } = new();
     public EmailSender EmailSender { get; set; } = new();
     public ReportService ReportService { get; set; } = new();
-    public OrderStatusHelper StatusHelper { get; set; } = new();
 
     public void Load()
     {
