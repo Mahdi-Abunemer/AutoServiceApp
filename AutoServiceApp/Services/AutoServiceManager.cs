@@ -306,7 +306,7 @@ public class AutoServiceManager
         foreach (var h in order.StatusHistory)
             sb.AppendLine(" - " + h);
         if (order.Customer?.Cars.Count > 0)
-            sb.AppendLine("First car owner phone: " + order.Customer.Cars[0].Owner?.Phone);
+            sb.AppendLine("First car owner phone: " + GetFirstCarOwnerPhone(order));
         return sb.ToString();
     }
 
@@ -360,5 +360,12 @@ public class AutoServiceManager
         var order = CreateOrder(c1, car1, "Knock on startup, diagnostics required", m1, "Diagnostics", "card");
         AddWorkToOrder(order, "Computer diagnostics", 1.5, 2500);
         SaveAll();
+    }
+
+    private static string? GetFirstCarOwnerPhone(RepairOrder order)
+    {
+        var firstCar = order.Customer?.Cars.FirstOrDefault();
+
+        return firstCar?.Owner?.Phone;
     }
 }
