@@ -29,12 +29,15 @@ public class RepairOrder : BaseEntity
         return $"{OrderNumber}: {client}, {car}, {Status}, {Cost:C}";
     }
 
-    public void MarkStatus(RepairOrder order, string status)
+    public void MarkStatus(string status)
     {
-        order.Status = status;
-        order.StatusHistory.Add($"{DateTime.Now:g}: status changed to {status}");
+        var changedAt = DateTime.Now;
+
+        Status = status;
+        StatusHistory.Add($"{changedAt:g}: status changed to {status}");
+
         if (status == "Ready")
-            order.CompletedAt = DateTime.Now;
+            CompletedAt = changedAt;
     }
 }
 
