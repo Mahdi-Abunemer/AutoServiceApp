@@ -6,6 +6,15 @@ namespace AutoServiceApp.Services;
 
 public class AutoServiceManager
 {
+    private const decimal UsedPartPriceMultiplier = 1.50m;
+    private const decimal PartCostMultiplier = 1.20m;
+    private const decimal CardPaymentFeeRate = 0.05m;
+    private const int LoyaltyCarCount = 2;
+    private const decimal LoyaltyDiscountRate = 0.10m;
+    private const decimal ReadyOrderFee = 500m;
+    private const decimal LargeOrderDiscountLimit = 10000m;
+    private const decimal LargeOrderDiscountRate = 0.15m;
+
     public List<Customer> Customers { get; set; } = new();
     public List<Car> Cars { get; set; } = new();
     public List<RepairOrder> Orders { get; set; } = new();
@@ -262,7 +271,7 @@ public class AutoServiceManager
 
         for (var i = 0; i < qty; i++)
             order.UsedPartIds.Add(part.Id);
-        order.Cost += part.Price * qty * 1.50m;
+        order.Cost += part.Price * qty * UsedPartPriceMultiplier;
         order.StatusHistory.Add($"{DateTime.Now:g}: part used {part.Name} x{qty}");
         SaveAll();
         return true;
@@ -271,16 +280,16 @@ public class AutoServiceManager
     public decimal CalculateOrderCost(RepairOrder order, bool final, string paymentMethod)
     {
         var works = order.Works.Sum(x => x.Cost + (decimal)x.Hours * (order.AssignedMechanic?.HourRate ?? 0));
-        var parts = order.UsedPartIds.Select(id => Parts.FirstOrDefault(p => p.Id == id)).Where(p => p != null).Sum(p => p!.Price * 1.20m);
+        var parts = order.UsedPartIds.Select(id => Parts.FirstOrDefault(p => p.Id == id)).Where(p => p != null).Sum(p => p!.Price * PartCostMultiplier);
         var result = works + parts;
         if (paymentMethod == "card")
-            result += result * 0.05m;
-        if (order.Customer != null && order.Customer.Cars.Count > 2)
-            result -= result * 0.10m;
+            result += result * CardPaymentFeeRate;
+        if (order.Customer != null && order.Customer.Cars.Count > LoyaltyCarCount)
+            result -= result * LoyaltyDiscountRate;
         if (final && order.Status == "Ready")
-            result += 500;
+            result += ReadyOrderFee;
 
-        var discount = result > 10000 ? result * 0.15m : 0;
+        var discount = result > LargeOrderDiscountLimit ? result * LargeOrderDiscountRate : 0;
 
         return result - discount;
     }
