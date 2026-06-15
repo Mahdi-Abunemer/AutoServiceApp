@@ -2,8 +2,10 @@ namespace AutoServiceApp.Models;
 
 public abstract class BaseReport
 {
+    private const int DefaultReportMonthsBack = -1;
+
     public string Title { get; set; } = "";
-    public DateTime From { get; set; } = DateTime.Today.AddMonths(-1);
+    public DateTime From { get; set; } = DateTime.Today.AddMonths(DefaultReportMonthsBack);
     public DateTime To { get; set; } = DateTime.Today;
     public string Text { get; set; } = "";
 }
