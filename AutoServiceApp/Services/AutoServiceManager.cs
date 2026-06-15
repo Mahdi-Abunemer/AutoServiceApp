@@ -253,7 +253,9 @@ public class AutoServiceManager
 
     public void AddWorkToOrder(RepairOrder order, string name, double hours, decimal cost)
     {
-        var work = new RepairWork { Name = name, Hours = hours, Cost = cost };
+        var work = new RepairWork { Name = name};
+        work.SetHours(hours);
+        work.SetCost(cost);
         order.Works.Add(work);
         order.Cost = CalculateOrderCost(order, false, order.PaymentMethod);
         SaveAll();
