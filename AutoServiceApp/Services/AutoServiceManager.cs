@@ -51,7 +51,7 @@ public class AutoServiceManager
     public void RelinkEverything()
     {
         foreach (var c in Customers)
-            c.Cars = Cars.Where(x => x.CustomerId == c.Id).ToList();
+            c.ReplaceCars(Cars.Where(x => x.CustomerId == c.Id));
 
         foreach (var car in Cars)
             car.Owner = Customers.FirstOrDefault(x => x.Id == car.CustomerId);
@@ -112,7 +112,7 @@ public class AutoServiceManager
 
         Cars.Add(car);
         if (owner != null)
-            owner.Cars.Add(car);
+            owner.AddCar(car);
         SaveAll();
         return car;
     }
@@ -135,7 +135,7 @@ public class AutoServiceManager
     {
         Cars.Remove(car);
         foreach (var c in Customers)
-            c.Cars.RemoveAll(x => x.Id == car.Id);
+            c.RemoveCar(car);
         foreach (var order in Orders.Where(x => x.CarId == car.Id).ToList())
             Orders.Remove(order);
         SaveAll();
