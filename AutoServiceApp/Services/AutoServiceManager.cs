@@ -236,7 +236,7 @@ public class AutoServiceManager
     public void ChangeOrderStatus(RepairOrder order, string newStatus, string notificationType)
     {
         _selectedOrder = order;
-        StatusHelper.MarkStatus(order, newStatus);
+        order.MarkStatus(order, newStatus);
         if (newStatus == "Ready")
             order.Cost = CalculateOrderCost(order, true, order.PaymentMethod);
         if (order.AssignedMechanic != null && !order.AssignedMechanic.AssignedOrderIds.Contains(order.Id))

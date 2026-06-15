@@ -28,6 +28,14 @@ public class RepairOrder : BaseEntity
         var car = Car == null ? CarId : $"{Car.Make} {Car.Model}";
         return $"{OrderNumber}: {client}, {car}, {Status}, {Cost:C}";
     }
+
+    public void MarkStatus(RepairOrder order, string status)
+    {
+        order.Status = status;
+        order.StatusHistory.Add($"{DateTime.Now:g}: status changed to {status}");
+        if (status == "Ready")
+            order.CompletedAt = DateTime.Now;
+    }
 }
 
 public class UrgentRepairOrder : RepairOrder
