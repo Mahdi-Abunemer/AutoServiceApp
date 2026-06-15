@@ -50,7 +50,7 @@ public class ManagerTests
 
         manager.AddWorkToOrder(order, "Scanner diagnostics", 2, 300);
         Assert.True(manager.UsePartForOrder(order, part, 1));
-        manager.ChangeOrderStatus(order, "Ready", "both");
+        manager.ChangeOrderStatus(order, "Ready", NotificationType.Both);
 
         Assert.Equal("Ready", order.Status);
         Assert.NotNull(order.CompletedAt);

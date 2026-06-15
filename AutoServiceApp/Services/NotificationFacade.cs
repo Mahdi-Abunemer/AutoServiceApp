@@ -28,5 +28,6 @@ public class NotificationFacade
 public enum NotificationType
 {
     Sms,
-    Email
+    Email,
+    Both
 }

@@ -238,12 +238,12 @@ public class AutoServiceManager
         order.PaymentMethod = paymentMethod;
         order.Cost = cost;
         if (order.Status != status)
-            ChangeOrderStatus(order, status, "both");
+            ChangeOrderStatus(order, status, NotificationType.Both);
         RelinkEverything();
         SaveAll();
     }
 
-    public void ChangeOrderStatus(RepairOrder order, string newStatus, string notificationType)
+    public void ChangeOrderStatus(RepairOrder order, string newStatus, NotificationType notificationType)
     {
         order.MarkStatus(newStatus);
         if (newStatus == "Ready")
@@ -330,14 +330,14 @@ public class AutoServiceManager
         return result;
     }
 
-    public void NotifyAboutStatus(RepairOrder order, string type)
+    public void NotifyAboutStatus(RepairOrder order, NotificationType type)
     {
         var phone = order.Customer?.Phone ?? "";
         var email = order.Customer?.Email ?? "";
         var text = $"Order {order.OrderNumber}: new status {order.Status}";
-        if (type == "sms")
+        if (type == NotificationType.Sms)
             SmsNotifier.SendSms(phone, text);
-        else if (type == "email")
+        else if (type == NotificationType.Email)
             EmailSender.Send(email, "Order status", text);
         else
         {
