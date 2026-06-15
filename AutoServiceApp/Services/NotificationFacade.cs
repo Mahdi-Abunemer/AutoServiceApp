@@ -2,8 +2,8 @@ namespace AutoServiceApp.Services;
 
 public class NotificationFacade
 {
-    public SmsNotifier Sms { get; set; }
-    public EmailSender Email { get; set; }
+    public SmsNotifier Sms { get; }
+    public EmailSender Email { get; }
 
     public NotificationFacade(SmsNotifier sms, EmailSender email)
     {
