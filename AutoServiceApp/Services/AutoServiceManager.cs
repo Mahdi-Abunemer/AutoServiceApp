@@ -106,9 +106,10 @@ public class AutoServiceManager
             Model = model,
             Year = year,
             Vin = vin,
-            Mileage = mileage,
             LicensePlate = licensePlate
         };
+        car.UpdateMileage(mileage);
+
         Cars.Add(car);
         if (owner != null)
             owner.Cars.Add(car);
@@ -124,7 +125,7 @@ public class AutoServiceManager
         car.Model = model;
         car.Year = year;
         car.Vin = vin;
-        car.Mileage = mileage;
+        car.UpdateMileage(mileage);
         car.LicensePlate = licensePlate;
         RelinkEverything();
         SaveAll();
