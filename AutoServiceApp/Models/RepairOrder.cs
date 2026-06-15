@@ -43,8 +43,10 @@ public class RepairOrder : BaseEntity
 
 public class UrgentRepairOrder : RepairOrder
 {
+    private const decimal DefaultUrgentFee = 500m;
+
     public bool NeedTaxi { get; set; }
-    public decimal UrgentFee { get; set; } = 500;
+    public decimal UrgentFee { get; set; } = DefaultUrgentFee;
 }
 
 public class WarrantyRepairOrder : RepairOrder
