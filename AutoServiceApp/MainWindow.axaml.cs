@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
-using AutoServiceApp.Helpers;
 using AutoServiceApp.Models;
 using AutoServiceApp.Services;
 
