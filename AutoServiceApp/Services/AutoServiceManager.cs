@@ -7,13 +7,7 @@ namespace AutoServiceApp.Services;
 public class AutoServiceManager
 {
     private const decimal UsedPartPriceMultiplier = 1.50m;
-    private const decimal PartCostMultiplier = 1.20m;
-    private const decimal CardPaymentFeeRate = 0.05m;
-    private const int LoyaltyCarCount = 2;
-    private const decimal LoyaltyDiscountRate = 0.10m;
-    private const decimal ReadyOrderFee = 500m;
-    private const decimal LargeOrderDiscountLimit = 10000m;
-    private const decimal LargeOrderDiscountRate = 0.15m;
+    private readonly OrderCostCalculator _orderCostCalculator = new();
 
     public List<Customer> Customers { get; set; } = new();
     public List<Car> Cars { get; set; } = new();
@@ -247,7 +241,7 @@ public class AutoServiceManager
     {
         order.MarkStatus(newStatus);
         if (newStatus == "Ready")
-            order.Cost = CalculateOrderCost(order, true, order.PaymentMethod);
+            order.Cost = _orderCostCalculator.CalculateOrderCost(order, true, order.PaymentMethod, Parts);
         if (order.AssignedMechanic != null && !order.AssignedMechanic.AssignedOrderIds.Contains(order.Id))
             order.AssignedMechanic.AssignOrder(order.Id);
         NotifyAboutStatus(order, notificationType);
@@ -260,7 +254,7 @@ public class AutoServiceManager
         work.SetHours(hours);
         work.SetCost(cost);
         order.Works.Add(work);
-        order.Cost = CalculateOrderCost(order, false, order.PaymentMethod);
+        order.Cost = _orderCostCalculator.CalculateOrderCost(order, false, order.PaymentMethod, Parts);
         SaveAll();
     }
 
@@ -275,23 +269,6 @@ public class AutoServiceManager
         order.StatusHistory.Add($"{DateTime.Now:g}: part used {part.Name} x{qty}");
         SaveAll();
         return true;
-    }
-
-    public decimal CalculateOrderCost(RepairOrder order, bool final, string paymentMethod)
-    {
-        var works = order.Works.Sum(x => x.Cost + (decimal)x.Hours * (order.AssignedMechanic?.HourRate ?? 0));
-        var parts = order.UsedPartIds.Select(id => Parts.FirstOrDefault(p => p.Id == id)).Where(p => p != null).Sum(p => p!.Price * PartCostMultiplier);
-        var result = works + parts;
-        if (paymentMethod == "card")
-            result += result * CardPaymentFeeRate;
-        if (order.Customer != null && order.Customer.Cars.Count > LoyaltyCarCount)
-            result -= result * LoyaltyDiscountRate;
-        if (final && order.Status == "Ready")
-            result += ReadyOrderFee;
-
-        var discount = result > LargeOrderDiscountLimit ? result * LargeOrderDiscountRate : 0;
-
-        return result - discount;
     }
 
     public string BuildOrderDetails(RepairOrder order)
