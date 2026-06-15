@@ -176,7 +176,8 @@ public class AutoServiceManager
 
     public Part AddPart(string name, string article, decimal price, int stock)
     {
-        var p = new Part { Name = name, Article = article, Price = price, Stock = stock };
+        var p = new Part { Name = name, Article = article, Price = price};
+        p.SetStock(stock);
         Parts.Add(p);
         SaveAll();
         return p;
@@ -187,7 +188,7 @@ public class AutoServiceManager
         part.Name = name;
         part.Article = article;
         part.Price = price;
-        part.Stock = stock;
+        part.SetStock(stock);
         SaveAll();
     }
 
@@ -261,10 +262,9 @@ public class AutoServiceManager
     public bool UsePartForOrder(RepairOrder order, Part part, int qty)
     {
         _selectedPart = part;
-        if (part.Stock < qty)
+        if (!part.UseStock(qty))
             return false;
 
-        part.Stock -= qty;
         for (var i = 0; i < qty; i++)
             order.UsedPartIds.Add(part.Id);
         order.Cost += part.Price * qty * 1.50m;
