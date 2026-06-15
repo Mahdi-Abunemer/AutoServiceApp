@@ -11,11 +11,11 @@ public class NotificationFacade
         Email = email;
     }
 
-    public void Notify(string type, string phone, string email, string title, string message)
+    public void Notify(NotificationType type, string phone, string email, string title, string message)
     {
-        if (type == "sms")
+        if (type == NotificationType.Sms)
             Sms.SendSms(phone, message);
-        else if (type == "email")
+        else if (type == NotificationType.Email)
             Email.Send(email, title, message);
         else
         {
@@ -23,4 +23,10 @@ public class NotificationFacade
             Email.Send(email, title, message);
         }
     }
+}
+
+public enum NotificationType
+{
+    Sms,
+    Email
 }
