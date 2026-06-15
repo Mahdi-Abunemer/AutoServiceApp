@@ -2,12 +2,11 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
-using AutoServiceApp.Helpers;
 using AutoServiceApp.Models;
 using AutoServiceApp.Services;
 
 namespace AutoServiceApp;
-
+/// <summary>
 public partial class MainWindow : Window
 {
     public AutoServiceManager Manager { get; set; } = new();

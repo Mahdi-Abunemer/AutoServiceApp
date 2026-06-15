@@ -28,12 +28,25 @@ public class RepairOrder : BaseEntity
         var car = Car == null ? CarId : $"{Car.Make} {Car.Model}";
         return $"{OrderNumber}: {client}, {car}, {Status}, {Cost:C}";
     }
+
+    public void MarkStatus(string status)
+    {
+        var changedAt = DateTime.Now;
+
+        Status = status;
+        StatusHistory.Add($"{changedAt:g}: status changed to {status}");
+
+        if (status == "Ready")
+            CompletedAt = changedAt;
+    }
 }
 
 public class UrgentRepairOrder : RepairOrder
 {
+    private const decimal DefaultUrgentFee = 500m;
+
     public bool NeedTaxi { get; set; }
-    public decimal UrgentFee { get; set; } = 500;
+    public decimal UrgentFee { get; set; } = DefaultUrgentFee;
 }
 
 public class WarrantyRepairOrder : RepairOrder
