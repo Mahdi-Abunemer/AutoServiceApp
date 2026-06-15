@@ -2,10 +2,12 @@ namespace AutoServiceApp.Services;
 
 public class SmsNotifier
 {
-    public List<string> SentMessages { get; set; } = new();
+    private readonly List<string> _sentMessages = new();
+
+    public IReadOnlyList<string> SentMessages => _sentMessages;
 
     public void SendSms(string phone, string text)
     {
-        SentMessages.Add($"SMS {DateTime.Now:g} -> {phone}: {text}");
+        _sentMessages.Add($"SMS {DateTime.Now:g} -> {phone}: {text}");
     }
 }
