@@ -64,7 +64,13 @@ public class AutoServiceManager
         }
 
         foreach (var m in Mechanics)
-            m.AssignedOrderIds = Orders.Where(x => x.AssignedMechanicId == m.Id).Select(x => x.Id).ToList();
+        {
+            var assignedOrderIds = Orders
+                .Where(x => x.AssignedMechanicId == m.Id)
+                .Select(x => x.Id);
+
+            m.ReplaceAssignedOrders(assignedOrderIds);
+        }
     }
 
     public Customer AddCustomer(string name, string phone, string email, string address)
@@ -210,7 +216,7 @@ public class AutoServiceManager
         order.StatusHistory.Add($"{DateTime.Now:g}: order created with status {status}");
         Orders.Add(order);
         if (mechanic != null)
-            mechanic.AssignedOrderIds.Add(order.Id);
+            mechanic.AssignOrder(order.Id);
         SaveAll();
         return order;
     }
@@ -239,7 +245,7 @@ public class AutoServiceManager
         if (newStatus == "Ready")
             order.Cost = CalculateOrderCost(order, true, order.PaymentMethod);
         if (order.AssignedMechanic != null && !order.AssignedMechanic.AssignedOrderIds.Contains(order.Id))
-            order.AssignedMechanic.AssignedOrderIds.Add(order.Id);
+            order.AssignedMechanic.AssignOrder(order.Id);
         NotifyAboutStatus(order, notificationType);
         SaveAll();
     }
